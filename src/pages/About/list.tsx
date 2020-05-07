@@ -2,6 +2,8 @@ import React, { useEffect, FC } from "react";
 import { useLocalStore, useObserver } from "mobx-react-lite";
 import { getData } from "../../service/test/test";
 import { RouteComponentProps } from "react-router-dom";
+import { PageHeaderWrapper } from "@ant-design/pro-layout";
+import { Card } from "antd";
 
 const List: FC<RouteComponentProps> = ({ history }) => {
   const store = useLocalStore(() => ({
@@ -20,13 +22,17 @@ const List: FC<RouteComponentProps> = ({ history }) => {
     store.initData();
   });
   return useObserver(() => (
-    <ul>
-      {store.data.map((item) => (
-        <li key={item} onClick={() => store.toListInfo(item)}>
-          {item}
-        </li>
-      ))}
-    </ul>
+    <PageHeaderWrapper>
+      <Card>
+        <ul>
+          {store.data.map((item) => (
+            <li key={item} onClick={() => store.toListInfo(item)}>
+              {item}
+            </li>
+          ))}
+        </ul>
+      </Card>
+    </PageHeaderWrapper>
   ));
 };
 export default List;

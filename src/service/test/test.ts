@@ -20,5 +20,4 @@ export const getData = (params: Params) =>
 export const addNewData = (params: Params) =>
   request.post<{}>(`${apiHost}/exactPath`, params);
 
-export const getBossReleaseNews = () =>
-  request.get<{ dataList: DataList[] }>(`/getBossReleaseNews`);
+export const getNews = () => request.get<{ dataList: DataList[] }>(`/getNews`);

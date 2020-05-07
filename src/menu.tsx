@@ -6,7 +6,7 @@ import { Redirect, Route, RouteComponentProps, Switch } from "react-router-dom";
 const menu: ProMenuType[] = [];
 
 //@ts-ignore
-const context = require.context("./pages", true, /\.\/[^/]+\/index\.ts?$/);
+const context = require.context("./pages", true, /\.\/[^/]+\/index\.tsx?$/);
 
 export interface ProMenuType {
   // 页面组件懒加载
@@ -21,7 +21,7 @@ export interface ProMenuType {
   //菜单项名称，影响页面标题和面包屑
   name: string;
   //菜单图标，ant design icon组件
-  icon?: string;
+  icon?: React.ReactNode;
   //子菜单
   routes?: ProMenuType[];
   //路径是否精确匹配
@@ -34,9 +34,13 @@ export interface ProMenuType {
 
 context.keys().forEach((item: string) => {
   try {
+    //正则会匹配所有的index组件，所以给home和login做下判断
     const menuItem = context(item).default;
-    // if (item === "./Home/index.ts") menu.unshift(menuItem);
-    if (menuItem instanceof Array) {
+    if (item === "./Home/index.tsx") {
+      menu.unshift(menuItem);
+    } else if (item === "./Login/index.tsx") {
+      return false;
+    } else if (menuItem instanceof Array) {
       menu.push(...menuItem);
     } else {
       menu.push(menuItem);
@@ -45,7 +49,6 @@ context.keys().forEach((item: string) => {
     console.log(err);
   }
 });
-
 const processMenuItem = (menuItem: ProMenuType) => {
   let Component: ComponentType<RouteComponentProps> = ({ children }) => (
     <>{children}</>
@@ -53,11 +56,9 @@ const processMenuItem = (menuItem: ProMenuType) => {
   if (menuItem.component) {
     Component = menuItem.component;
   }
-  //如果用antd-pro，在有二级导航时一级导航没有对应的组件，
-  //所以每个模块的index.ts的根路由没有component组件，
-  //这里再加上redirect重定向到第一个子组件即可
 
-  //不用antd-pro，把redirect删除，对应的根路由加上具体component即可
+  //每个模块的index.tsx的根路由可能没有component组件，
+  //这里加上redirect重定向到第一个子组件
   const children = menuItem.routes ? (
     <Switch>
       {menuItem.routes.map(processMenuItem)}

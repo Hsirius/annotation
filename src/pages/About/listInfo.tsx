@@ -1,7 +1,9 @@
 import { useObserver, useLocalStore } from "mobx-react-lite";
 import React, { FC, useEffect } from "react";
 import { RouteComponentProps } from "react-router-dom";
-import { getBossReleaseNews } from "../../service/test/test";
+import { getNews } from "../../service/test/test";
+import { PageHeaderWrapper } from "@ant-design/pro-layout";
+import { Card } from "antd";
 
 const ListInfo: FC<RouteComponentProps<{ listId: string }>> = ({
   history,
@@ -10,15 +12,19 @@ const ListInfo: FC<RouteComponentProps<{ listId: string }>> = ({
   },
 }) => {
   const store = useLocalStore(() => ({
-    getBossReleaseNewss: () => {
-      getBossReleaseNews().then((res) => {
+    getData: () => {
+      getNews().then((res) => {
         console.log(res);
       });
     },
   }));
   useEffect(() => {
-    store.getBossReleaseNewss();
+    store.getData();
   }, []);
-  return useObserver(() => <div>{listId}</div>);
+  return useObserver(() => (
+    <PageHeaderWrapper>
+      <Card>{listId}</Card>
+    </PageHeaderWrapper>
+  ));
 };
 export default ListInfo;

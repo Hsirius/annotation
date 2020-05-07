@@ -1,44 +1,62 @@
-import React, { useEffect } from "react";
+import React, { FC } from "react";
 import { useLocalStore, useObserver } from "mobx-react-lite";
-import { Link } from "react-router-dom";
 import styles from "./index.module.scss";
+import { Form, Input, Checkbox, Button } from "antd";
+import { RouteComponentProps } from "react-router-dom";
+import { hot } from "react-hot-loader/root";
+import logo from "@ant-design/pro-layout/es/assets/logo.svg";
 
-const Login = () => {
+const Login: FC<RouteComponentProps> = ({ history }) => {
   const store = useLocalStore(() => ({
-    msg: "login",
-    loginStatus: false,
-    login: () => {
+    onFinish: (values: any) => {
+      console.log("Success:", values);
       sessionStorage.setItem("loginStatus", "true");
-      store.loginStatus = true;
-    },
-    logout: () => {
-      sessionStorage.removeItem("loginStatus");
-      store.loginStatus = false;
+      history.push("/");
     },
   }));
-  useEffect(() => {
-    store.loginStatus = sessionStorage.getItem("loginStatus") === "true";
-  }, [store.loginStatus]);
+  const tailLayout = {
+    wrapperCol: { offset: 4, span: 16 },
+  };
   return useObserver(() => (
-    <div>
-      <h2>{store.msg}</h2>
-      {store.loginStatus ? (
-        <>
-          <Link to={"/home"} className={styles.loginBtn}>
-            to home
-          </Link>
-          <div onClick={store.logout} className={styles.loginBtn}>
-            click to login out
-          </div>
-        </>
-      ) : (
-        <>
-          <div onClick={store.login} className={styles.loginBtn}>
-            click to login in
-          </div>
-        </>
-      )}
+    <div className={styles.loginPage}>
+      <div className={styles.formWrapper}>
+        <header className={styles.header}>
+          <img src={logo} alt="logo" className={styles.logo} />
+          <span className={styles.title}>标注平台</span>
+        </header>
+        <Form
+          name="basic"
+          initialValues={{ remember: true }}
+          onFinish={store.onFinish}
+        >
+          <Form.Item
+            label="账户"
+            name="username"
+            rules={[{ required: true, message: "请输入账户!" }]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+            label="密码"
+            name="password"
+            rules={[{ required: true, message: "请输入密码!" }]}
+          >
+            <Input.Password />
+          </Form.Item>
+
+          <Form.Item {...tailLayout} name="remember" valuePropName="checked">
+            <Checkbox>记住密码</Checkbox>
+          </Form.Item>
+
+          <Form.Item {...tailLayout}>
+            <Button type="primary" htmlType="submit">
+              登录
+            </Button>
+          </Form.Item>
+        </Form>
+      </div>
     </div>
   ));
 };
-export default Login;
+export default hot(Login);
