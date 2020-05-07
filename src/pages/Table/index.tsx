@@ -1,9 +1,11 @@
 import React from "react";
 import { ProMenuExport } from "../../menu";
+import { UnorderedListOutlined } from "@ant-design/icons";
 
 const menu: ProMenuExport = {
   path: "/table",
   name: "table",
+  icon: <UnorderedListOutlined />,
   routes: [
     {
       name: "tableList",

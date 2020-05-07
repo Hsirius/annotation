@@ -1,7 +1,15 @@
 import React from "react";
 import { useLocalStore, useObserver } from "mobx-react-lite";
 import { PageHeaderWrapper } from "@ant-design/pro-layout";
-import { Card, Table, Tag, Space } from "antd";
+import { Card, Table, Tag, Space, Popconfirm, Divider, message } from "antd";
+
+interface ItemType {
+  key: string;
+  name: string;
+  age: number;
+  address: string;
+  tags: string[];
+}
 
 const TablePage = () => {
   const store = useLocalStore(() => ({
@@ -28,6 +36,9 @@ const TablePage = () => {
         tags: ["cool", "teacher"],
       },
     ],
+    handleDelete: (key: string) => {
+      message.success(`key${key}删除成功`);
+    },
   }));
   const columns = [
     {
@@ -69,10 +80,16 @@ const TablePage = () => {
     {
       title: "Action",
       key: "action",
-      render: (text: string, record: any) => (
+      render: (text: string, record: ItemType) => (
         <Space size="middle">
-          <a href="#">Invite {record.name}</a>
-          <a href="#">Delete</a>
+          <a>Invite {record.name}</a>
+          <Divider type="vertical" />
+          <Popconfirm
+            title="确定删除?"
+            onConfirm={() => store.handleDelete(record.key)}
+          >
+            <a>Delete</a>
+          </Popconfirm>
         </Space>
       ),
     },

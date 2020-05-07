@@ -5,6 +5,7 @@ import ProLayout from "@ant-design/pro-layout";
 import { hot } from "react-hot-loader/root";
 import RightContent from "./RightContent";
 import menu from "../../menu";
+import "./index.scss";
 
 const BasicLayout = withRouter(({ location, children }) => {
   return useObserver(() => (

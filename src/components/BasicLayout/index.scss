@@ -1,1 +1,7 @@
-@import "~@ant-design/pro-layout/es/BasicLayout.less";
+:global {
+  .ant-layout-header,
+  .ant-pro-global-header,
+  .ant-pro-basicLayout .ant-layout-header:not(.ant-pro-top-menu) {
+    background: #001529 !important;
+  }
+}
